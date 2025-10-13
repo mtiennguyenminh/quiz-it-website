@@ -5,56 +5,57 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Trắc nghiệm kiến thức IT</title>
 
-  <!-- fast preconnect -->
+  <!-- Font + CSS -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-  <!-- Load Be Vietnam Pro (có hỗ trợ tiếng Việt) -->
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800&display=swap" rel="stylesheet">
-
-  <!-- style riêng (hoặc link tới style.css) -->
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
-  <h1 class="quiz-title">🧠 Trắc nghiệm kiến thức IT</h1>
+  <!-- ====== TIÊU ĐỀ TRANG ====== -->
+  <header>
+    <h1 class="quiz-title">
+      <img src="https://cdn-icons-png.flaticon.com/512/3940/3940056.png" alt="Brain" />
+      Trắc nghiệm kiến thức IT
+    </h1>
+  </header>
 
-<style>
-.quiz-title {
-  font-family: 'Be Vietnam Pro', 'Roboto', sans-serif;
-  font-weight: 800;
-  font-size: 2.2rem;
-  color: #1a3365;
-  text-align: center;
-  margin-top: 20px;
-}
-
-/* Import font hỗ trợ tiếng Việt */
-@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@600;700;800&display=swap');
-</style>
-
-
-  <div id="login">
+  <!-- ====== MÀN HÌNH ĐĂNG NHẬP ====== -->
+  <section id="login">
     <h2>Đăng nhập</h2>
-    <input id="username" placeholder="Nhập tên của bạn">
-    <button onclick="startQuiz()">Bắt đầu</button>
-  </div>
+    <p>Nhập tên để bắt đầu bài kiểm tra 10 câu hỏi ngẫu nhiên!</p>
+    <div class="login-form">
+      <input id="username" type="text" placeholder="Nhập tên của bạn" maxlength="20" />
+      <button onclick="startQuiz()">Bắt đầu</button>
+    </div>
+  </section>
 
-  <div id="quiz" style="display:none;">
+  <!-- ====== MÀN HÌNH CÂU HỎI ====== -->
+  <section id="quiz" style="display:none;">
     <div id="question-container"></div>
     <div class="timer">⏰ Thời gian còn lại: <span id="time">10</span>s</div>
-  </div>
+  </section>
 
-  <div id="result" style="display:none;">
+  <!-- ====== KẾT QUẢ ====== -->
+  <section id="result" style="display:none;">
     <h2>Kết quả của bạn</h2>
     <p id="score"></p>
     <button onclick="restart()">Làm lại</button>
-  </div>
+  </section>
 
-  <div id="leaderboard" style="display:none;">
+  <!-- ====== BẢNG XẾP HẠNG ====== -->
+  <section id="leaderboard" style="display:none;">
     <h2>🏆 Top 10 người chơi xuất sắc</h2>
     <table id="board"></table>
-  </div>
+  </section>
 
+  <!-- ====== CHÂN TRANG ====== -->
+  <footer>
+    <p>© 2025 | Dự án Thực tập cơ sở - Website Trắc nghiệm IT</p>
+  </footer>
+
+  <!-- Script chính -->
   <script src="script.js"></script>
 </body>
 </html>
