@@ -1,5 +1,5 @@
 // =======================================
-// 🧠 WEBSITE TRẮC NGHIỆM KIẾN THỨC IT
+// WEBSITE TRẮC NGHIỆM KIẾN THỨC IT
 // =======================================
 
 let username = "";
