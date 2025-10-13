@@ -1,68 +1,153 @@
-/* áp font cho toàn bộ trang */
+/* ========== TOÀN TRANG ========== */
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800&display=swap');
+
 body {
   font-family: 'Be Vietnam Pro', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/* kiểu tiêu đề */
-h1.quiz-title, h1 {
-  font-weight: 800;
-  font-size: 2.2rem;
-  color: #1a3365;
-  margin: 20px 0;
-}
-
-body {
-  font-family: Arial, sans-serif;
   background: #f5f6fa;
   color: #2f3640;
   text-align: center;
   padding: 20px;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-h1 {
-  font-size: 36px;
-  font-weight: bold;
-  color: #273c75;
+/* ========== TIÊU ĐỀ CHÍNH ========== */
+h1.quiz-title {
+  font-weight: 800;
+  font-size: 2.8rem;
+  color: #1a3365;
+  margin: 20px 0 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 }
 
-#quiz {
-  max-width: 600px;
-  margin: auto;
-  background: #fff;
-  padding: 20px;
+h1.quiz-title img {
+  width: 42px;
+  height: 42px;
+  vertical-align: middle;
+}
+
+/* ========== KHU VỰC ĐĂNG NHẬP ========== */
+#login {
+  background: #ffffff;
+  max-width: 400px;
+  margin: 40px auto;
+  padding: 25px;
   border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+#login h2 {
+  font-size: 1.5rem;
+  color: #273c75;
+  margin-bottom: 15px;
+}
+
+#username {
+  width: 70%;
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+button {
+  padding: 10px 16px;
+  margin-left: 8px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 6px;
+  background-color: #273c75;
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+button:hover {
+  background-color: #40739e;
+}
+
+/* ========== KHU VỰC TRẮC NGHIỆM ========== */
+#quiz {
+  max-width: 650px;
+  margin: 40px auto;
+  background: #ffffff;
+  padding: 25px 30px;
+  border-radius: 12px;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  color: #192a56;
+  font-size: 1.3rem;
+  font-weight: 600;
 }
 
 .option {
-  background: #dcdde1;
-  margin: 8px 0;
-  padding: 10px;
-  border-radius: 6px;
+  background: #f1f2f6;
+  margin: 10px 0;
+  padding: 12px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.25s ease;
+  text-align: left;
+  font-size: 1rem;
 }
 
 .option:hover {
   background: #00a8ff;
   color: white;
+  transform: scale(1.02);
 }
 
+/* ========== BỘ ĐẾM THỜI GIAN ========== */
 .timer {
   margin-top: 15px;
   color: #e84118;
-  font-weight: bold;
+  font-weight: 700;
+  font-size: 1.1rem;
 }
 
+/* ========== BẢNG XẾP HẠNG ========== */
 table {
-  margin: auto;
+  margin: 30px auto 0;
   border-collapse: collapse;
-  width: 70%;
+  width: 75%;
+  background-color: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
 }
 
-th, td {
-  border: 1px solid #ccc;
-  padding: 8px;
+th {
+  background-color: #273c75;
+  color: white;
+  padding: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+td {
+  border: 1px solid #eee;
+  padding: 10px;
+  font-size: 0.95rem;
+  color: #2f3640;
+}
+
+tr:nth-child(even) {
+  background-color: #f5f6fa;
+}
+
+tr:hover {
+  background-color: #dcdde1;
+}
+
+/* ========== FOOTER (nếu có) ========== */
+footer {
+  margin-top: 40px;
+  color: #718093;
+  font-size: 0.9rem;
 }
