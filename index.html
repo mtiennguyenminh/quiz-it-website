@@ -2,23 +2,161 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Quiz IT Website</title>
-  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trắc nghiệm kiến thức IT</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f6fa;
+      color: #2f3640;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 36px;
+      font-weight: bold;
+      color: #273c75;
+    }
+
+    #quiz-container {
+      max-width: 600px;
+      margin: 20px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .question {
+      font-size: 20px;
+      margin-bottom: 15px;
+      font-weight: bold;
+    }
+
+    .option {
+      display: block;
+      text-align: left;
+      background: #dcdde1;
+      margin: 8px 0;
+      padding: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .option:hover {
+      background: #00a8ff;
+      color: white;
+    }
+
+    .timer {
+      font-size: 18px;
+      color: #e84118;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
-  <h1></h1>Trắc nghiệm kiến thức IT</h1>
-
+  <h1>Trắc nghiệm kiến thức IT</h1>
   <div id="quiz-container">
-    <div id="question"></div>
-    <div id="answers"></div>
-    <div id="controls">
-      <button id="next-btn">Câu tiếp theo</button>
-      <button id="restart-btn" style="display:none;">Làm lại</button>
-    </div>
-    <p id="result"></p>
+    <p>Đang tải câu hỏi...</p>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    // Dữ liệu mẫu (trong thực tế có thể lấy từ API)
+    const questions = [
+      {
+        question: "HTML là viết tắt của?",
+        options: ["Hyper Text Markup Language", "High Text Markup Language", "Hyperlinks and Text Markup Language", "Home Tool Markup Language"],
+        answer: 0
+      },
+      {
+        question: "CSS dùng để làm gì?",
+        options: ["Tạo hiệu ứng âm thanh", "Thiết kế giao diện trang web", "Lưu trữ dữ liệu", "Kết nối với server"],
+        answer: 1
+      },
+      {
+        question: "JavaScript là ngôn ngữ?",
+        options: ["Frontend", "Backend", "Có thể dùng cho cả hai", "Không phải ngôn ngữ lập trình"],
+        answer: 2
+      },
+      {
+        question: "Git dùng để?",
+        options: ["Quản lý mã nguồn", "Chạy server", "Viết code HTML", "Tạo database"],
+        answer: 0
+      },
+      {
+        question: "HTTP là viết tắt của?",
+        options: ["HyperText Transfer Protocol", "Hyperlink Text Transfer Program", "Home Tool Transfer Protocol", "Hyper Transfer Text Protocol"],
+        answer: 0
+      }
+    ];
+
+    // Biến toàn cục
+    let currentQuestion = 0;
+    let score = 0;
+    let timer;
+    let timeLeft = 10;
+
+    // Hiển thị câu hỏi
+    function showQuestion() {
+      if (currentQuestion >= 10 || currentQuestion >= questions.length) {
+        document.getElementById("quiz-container").innerHTML = `
+          <h2>Bạn đã hoàn thành bài!</h2>
+          <p>Điểm số: ${score}/${questions.length}</p>
+        `;
+        return;
+      }
+
+      const q = questions[currentQuestion];
+      const container = document.getElementById("quiz-container");
+
+      container.innerHTML = `
+        <div class="question">${currentQuestion + 1}. ${q.question}</div>
+        ${q.options.map((opt, i) => 
+          `<div class="option" onclick="selectAnswer(${i})">
+            ${String.fromCharCode(65 + i)}. ${opt}
+          </div>`
+        ).join('')}
+        <div class="timer">⏰ Thời gian còn lại: <span id="time">${timeLeft}</span>s</div>
+      `;
+
+      startTimer();
+    }
+
+    // Bắt đầu đếm ngược
+    function startTimer() {
+      timeLeft = 10;
+      clearInterval(timer);
+      timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById("time").textContent = timeLeft;
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          nextQuestion();
+        }
+      }, 1000);
+    }
+
+    // Khi người dùng chọn đáp án
+    function selectAnswer(index) {
+      clearInterval(timer);
+      if (index === questions[currentQuestion].answer) {
+        score++;
+      }
+      nextQuestion();
+    }
+
+    // Chuyển sang câu tiếp theo
+    function nextQuestion() {
+      currentQuestion++;
+      showQuestion();
+    }
+
+    // Bắt đầu bài kiểm tra
+    showQuestion();
+  </script>
 </body>
 </html>
