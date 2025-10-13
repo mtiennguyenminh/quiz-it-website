@@ -17,9 +17,10 @@ function renderQuestion(){
   const q = quiz[current];
   questionEl.textContent = `${current+1}. ${q.question}`;
   answersEl.innerHTML = '';
+  const letters = ['A', 'B', 'C', 'D'];
   q.answers.forEach((a,i)=>{
     const b = document.createElement('button');
-    b.textContent = a;
+    b.textContent = `${letters[i]}. ${a}`;
     b.onclick = ()=> handleAnswer(i);
     answersEl.appendChild(b);
   });
