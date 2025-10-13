@@ -1,86 +1,114 @@
-const questionEl = document.getElementById('question');
-const answersEl = document.getElementById('answers');
-const nextBtn = document.getElementById('next-btn');
-const restartBtn = document.getElementById('restart-btn');
-const resultEl = document.getElementById('result');
-
+let username = "";
+let questions = [];
 let current = 0;
 let score = 0;
-let quiz = [];
+let timer;
+let timeLeft = 10;
 
-// Hàm gọi API lấy câu hỏi
+// Bắt đầu bài trắc nghiệm
+function startQuiz() {
+  username = document.getElementById("username").value.trim();
+  if (!username) return alert("Nhập tên trước khi bắt đầu!");
+  document.getElementById("login").style.display = "none";
+  document.getElementById("quiz").style.display = "block";
+  loadQuestions();
+}
+
+// Lấy câu hỏi từ API public
 async function loadQuestions() {
-  questionEl.textContent = "⏳ Đang tải câu hỏi...";
   try {
-    const res = await fetch("https://opentdb.com/api.php?amount=10&category=18&type=multiple");
+    // Dùng Open Trivia DB (nguồn free và có API)
+    const res = await fetch("https://opentdb.com/api.php?amount=20&category=18&type=multiple");
     const data = await res.json();
-    quiz = data.results.map(q => {
-      const answers = [...q.incorrect_answers];
-      const randomIndex = Math.floor(Math.random() * (answers.length + 1));
-      answers.splice(randomIndex, 0, q.correct_answer);
-      return {
-        question: decodeHTMLEntities(q.question),
-        answers: answers.map(decodeHTMLEntities),
-        correct: randomIndex
-      };
-    });
-    current = 0;
-    score = 0;
-    renderQuestion();
-  } catch (e) {
-    questionEl.textContent = "❌ Lỗi tải dữ liệu. Vui lòng tải lại trang.";
-    console.error(e);
+
+    // Random chọn 10 câu
+    questions = data.results.sort(() => 0.5 - Math.random()).slice(0, 10);
+    showQuestion();
+  } catch (err) {
+    alert("Không thể tải câu hỏi. Kiểm tra kết nối mạng!");
   }
 }
 
-function decodeHTMLEntities(str) {
+// Hiển thị câu hỏi
+function showQuestion() {
+  if (current >= questions.length) return finishQuiz();
+  const q = questions[current];
+
+  // Trộn đáp án
+  const options = [...q.incorrect_answers];
+  const correctIndex = Math.floor(Math.random() * 4);
+  options.splice(correctIndex, 0, q.correct_answer);
+
+  const container = document.getElementById("question-container");
+  container.innerHTML = `
+    <h3>${current + 1}. ${decode(q.question)}</h3>
+    ${options.map((opt, i) =>
+      `<div class="option" onclick="selectAnswer(${i}, ${correctIndex})">
+         ${String.fromCharCode(65+i)}. ${decode(opt)}
+       </div>`).join("")}
+  `;
+
+  // Reset thời gian
+  timeLeft = 10;
+  document.getElementById("time").textContent = timeLeft;
+  clearInterval(timer);
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("time").textContent = timeLeft;
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+// Chọn đáp án
+function selectAnswer(index, correct) {
+  clearInterval(timer);
+  if (index === correct) score++;
+  nextQuestion();
+}
+
+function nextQuestion() {
+  current++;
+  showQuestion();
+}
+
+// Kết thúc bài trắc nghiệm
+function finishQuiz() {
+  document.getElementById("quiz").style.display = "none";
+  document.getElementById("result").style.display = "block";
+  document.getElementById("leaderboard").style.display = "block";
+  document.getElementById("score").textContent = `${username}, bạn được ${score}/${questions.length} điểm.`;
+  saveToLeaderboard();
+  renderLeaderboard();
+}
+
+// Lưu điểm top 10 trong localStorage
+function saveToLeaderboard() {
+  let board = JSON.parse(localStorage.getItem("leaderboard") || "[]");
+  board.push({ name: username, score });
+  board.sort((a, b) => b.score - a.score);
+  board = board.slice(0, 10);
+  localStorage.setItem("leaderboard", JSON.stringify(board));
+}
+
+function renderLeaderboard() {
+  const board = JSON.parse(localStorage.getItem("leaderboard") || "[]");
+  const table = document.getElementById("board");
+  table.innerHTML = "<tr><th>Hạng</th><th>Tên</th><th>Điểm</th></tr>";
+  board.forEach((p, i) => {
+    table.innerHTML += `<tr><td>${i + 1}</td><td>${p.name}</td><td>${p.score}</td></tr>`;
+  });
+}
+
+function restart() {
+  location.reload();
+}
+
+// Giúp hiển thị ký tự HTML (ví dụ: &quot; → “)
+function decode(str) {
   const txt = document.createElement("textarea");
   txt.innerHTML = str;
   return txt.value;
 }
-
-function renderQuestion(){
-  const q = quiz[current];
-  const letters = ['A', 'B', 'C', 'D'];
-  questionEl.textContent = `${current+1}. ${q.question}`;
-  answersEl.innerHTML = '';
-  q.answers.forEach((a,i)=>{
-    const b = document.createElement('button');
-    b.textContent = `${letters[i]}. ${a}`;
-    b.onclick = ()=> handleAnswer(i);
-    answersEl.appendChild(b);
-  });
-  resultEl.textContent = '';
-  nextBtn.style.display = 'none';
-  restartBtn.style.display = 'none';
-}
-
-function handleAnswer(choice){
-  const correct = quiz[current].correct;
-  if(choice === correct){
-    score++;
-    resultEl.textContent = "✔️ Đúng!";
-  } else {
-    resultEl.textContent = `❌ Sai! Đáp án đúng: ${quiz[current].answers[correct]}`;
-  }
-  Array.from(answersEl.children).forEach(btn => btn.disabled = true);
-  if(current < quiz.length - 1){
-    nextBtn.style.display = 'inline-block';
-  } else {
-    questionEl.textContent = `Kết thúc! Bạn được ${score}/${quiz.length} điểm 🎉`;
-    answersEl.innerHTML = '';
-    nextBtn.style.display = 'none';
-    restartBtn.style.display = 'inline-block';
-  }
-}
-
-nextBtn.onclick = () => {
-  current++;
-  renderQuestion();
-};
-
-restartBtn.onclick = () => {
-  loadQuestions();
-};
-
-loadQuestions();
